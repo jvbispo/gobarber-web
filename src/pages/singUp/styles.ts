@@ -63,8 +63,20 @@ export const AnimationContainer = styled.div`
   }
 `;
 
+const animationBackground = keyframes`
+  from{
+    opacity: 0;
+
+  }
+  to{
+    opacity: 1;
+
+  }
+`;
+
 export const Background = styled.div`
   background: url(${BackgroundImg}) no-repeat center;
   flex: 1;
   background-size: cover;
+  animation: 2s ${animationBackground};
 `;

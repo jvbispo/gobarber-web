@@ -8,17 +8,17 @@ interface ContainerProps {
 }
 
 export const Container = styled.div<ContainerProps>`
-  background: #232129;
-  border-radius: 5px;
-  border: 2px solid #232129;
-  padding: 16px;
+ /*background: #232129;*/
+ /* border-radius: 5px;*/
+  border-bottom: 2px solid #aaa;
+  padding: 8px;
   width: 100%;
   color: #f4edd8;
   display: flex;
   align-items: center;
 
   & + div {
-    margin-top: 8px;
+    margin-top: 20px;
   }
 
   svg {
@@ -29,14 +29,14 @@ export const Container = styled.div<ContainerProps>`
     props.isErrored &&
     css`
       color: #cc3030;
-      border: 2px solid #cc3030;
+      border-bottom: 2px solid #cc3030;
     `}
 
   ${(props) =>
     props.isFocused &&
     css`
       color: #ff9000;
-      border: 2px solid #ff9000;
+      border-bottom: 2px solid #ff9000;
     `}
 
   ${(props) =>
