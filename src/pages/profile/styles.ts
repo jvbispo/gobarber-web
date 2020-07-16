@@ -35,12 +35,14 @@ export const AnimationContainer = styled.div`
   animation: 1s ${animationKeyFrame};
 
   form {
-    margin-top: 45px;
+    margin-top: 35px;
     width: 340px;
     text-align: center;
 
     h1 {
       margin-bottom: 24px;
+      font-size: 24px;
+      text-align: left;
     }
 
     a {
@@ -74,9 +76,31 @@ const animationBackground = keyframes`
   }
 `;
 
-export const Background = styled.div`
-  background: url(${BackgroundImg}) no-repeat center;
-  flex: 1;
-  background-size: cover;
-  animation: 2s ${animationBackground};
+export const AvatarInput = styled.div`
+  /* margin-bottom: 24px; */
+  position: relative;
+  align-self: center;
+
+  img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    color: #f4edd8;
+  }
+
+  button {
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    background-color: #ff9000;
+    border: none;
+    border-radius: 50%;
+    color: #f4edd8;
+    bottom: 0;
+    right: 0;
+    transition: background 0.2s;
+    &:hover {
+      background: ${shade(0.2, '#ff9000')};
+    }
+  }
 `;

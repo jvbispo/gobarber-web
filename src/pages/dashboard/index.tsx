@@ -9,6 +9,7 @@ import 'react-day-picker/lib/style.css';
 import ptBr from 'date-fns/locale/pt-BR';
 import { parseISO, isAfter } from 'date-fns/esm';
 import { Link } from 'react-router-dom';
+import profileSVG from '../../assets/profile.svg';
 import {
   Container,
   Header,
@@ -139,7 +140,11 @@ const Dashboard: React.FC = () => {
           <img src={logo} alt="Go Barber" />
 
           <Profile>
-            <img src={user.avatar_url} alt={user.name} />
+            <img
+              style={{ color: '#666' }}
+              src={user.avatar_url === null ? profileSVG : user.avatar_url}
+              alt={user.name}
+            />
             <div>
               <span>Bem vindo,</span>
               <Link to="/profile">
