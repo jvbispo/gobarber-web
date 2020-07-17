@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useRef, ChangeEvent } from 'react';
 import { FiMail, FiLock, FiUser, FiArrowLeft, FiCamera } from 'react-icons/fi';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
@@ -13,13 +13,21 @@ import { useToast } from '../../hooks/toastContext';
 import profileSVG from '../../assets/profile.svg';
 import { useAuth } from '../../hooks/authContext';
 
+interface ProfileFormData {
+  name: string;
+  email: string;
+  oldPassword: string;
+  password: string;
+  confirmPassword: string;
+}
+
 const Profile: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
-  const { user } = useAuth();
+  const { user, updateUser } = useAuth();
   const { addToast } = useToast();
   const history = useHistory();
   const handleSubmit = useCallback(
-    async (data: object) => {
+    async (data: ProfileFormData) => {
       try {
         formRef.current?.setErrors({});
         const schema = Yup.object().shape({
@@ -27,20 +35,49 @@ const Profile: React.FC = () => {
           email: Yup.string()
             .email('enter a valid email')
             .required('email is required'),
-          password: Yup.string().min(6),
+          oldPassword: Yup.string(),
+          password: Yup.string().when('oldPassword', {
+            is: (val) => !!val.length,
+            then: Yup.string().required().min(6),
+            otherwise: Yup.string(),
+          }),
+          passwordConfirmation: Yup.string()
+            .when('oldPassword', {
+              is: (val) => !!val.length,
+              then: Yup.string().required().min(6),
+              otherwise: Yup.string(),
+            })
+            .oneOf([Yup.ref('password'), null])
+            .required(),
         });
 
         await schema.validate(data, {
           abortEarly: false,
         });
 
-        await api.post('/users', data);
+        const { name, email, password, oldPassword, confirmPassword } = data;
 
-        history.push('/');
+        const formData = {
+          name,
+          email,
+          ...(oldPassword
+            ? {
+                oldPassword,
+                password,
+                confirmPassword,
+              }
+            : {}),
+        };
+
+        const response = await api.put('/profile', formData);
+        console.log(response.data);
+        updateUser(response.data);
+
+        history.push('/dashboard');
 
         addToast({
           type: 'success',
-          title: 'alteções feitas com sucesso',
+          title: 'alterações feitas com sucesso',
         });
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
@@ -59,6 +96,23 @@ const Profile: React.FC = () => {
     [addToast, history],
   );
 
+  const handleAvatarChange = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      if (e.target.files) {
+        const data = new FormData();
+        data.append('avatar', e.target.files[0]);
+
+        api.patch('/users/avatar', data).then(() => {
+          addToast({
+            type: 'success',
+            title: 'avatar atualizado',
+          });
+        });
+      }
+    },
+    [addToast],
+  );
+
   return (
     <Container>
       <Content>
@@ -69,9 +123,10 @@ const Profile: React.FC = () => {
               src={user.avatar_url === null ? profileSVG : user.avatar_url}
               alt={user.name}
             />
-            <button type="button">
+            <label htmlFor="avatar">
               <FiCamera />
-            </button>
+              <input type="file" id="avatar" onChange={handleAvatarChange} />
+            </label>
           </AvatarInput>
           <Form ref={formRef} onSubmit={handleSubmit}>
             <h1>Meu perfil</h1>
@@ -86,19 +141,19 @@ const Profile: React.FC = () => {
             <Input
               style={{ marginTop: 15 }}
               icon={FiLock}
-              name="old_password"
+              name="oldPassword"
               type="password"
               placeholder="senha atual"
             />
             <Input
               icon={FiLock}
-              name="new_password"
+              name="password"
               type="password"
               placeholder="Nova senha"
             />
             <Input
               icon={FiLock}
-              name="password_confirmation"
+              name="confirmPassword"
               type="password"
               placeholder="Confirmar Senha"
             />

@@ -88,7 +88,7 @@ export const AvatarInput = styled.div`
     color: #f4edd8;
   }
 
-  button {
+  label {
     position: absolute;
     width: 32px;
     height: 32px;
@@ -99,6 +99,19 @@ export const AvatarInput = styled.div`
     bottom: 0;
     right: 0;
     transition: background 0.2s;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    input {
+      display: none;
+    }
+
+    svg {
+      height: 20px;
+      width: 20px;
+    }
     &:hover {
       background: ${shade(0.2, '#ff9000')};
     }
