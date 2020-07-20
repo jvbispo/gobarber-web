@@ -19,12 +19,14 @@ interface FormData {
 
 const SignIn: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
+  const history = useHistory();
   const { addToast } = useToast();
   const { user, signIn } = useAuth();
 
   const handleSubmit = useCallback(
     async (data: FormData) => {
       try {
+        console.log('error');
         formRef.current?.setErrors({});
         const schema = Yup.object().shape({
           email: Yup.string()
@@ -41,6 +43,8 @@ const SignIn: React.FC = () => {
           email: data.email,
           password: data.password,
         });
+
+        history.push('/dashboard');
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
           const validationErros = getValidationErrors(err);
@@ -55,7 +59,7 @@ const SignIn: React.FC = () => {
         }
       }
     },
-    [signIn, addToast],
+    [signIn, addToast, history],
   );
 
   return (
