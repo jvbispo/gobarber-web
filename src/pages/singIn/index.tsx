@@ -26,7 +26,6 @@ const SignIn: React.FC = () => {
   const handleSubmit = useCallback(
     async (data: FormData) => {
       try {
-        console.log('error');
         formRef.current?.setErrors({});
         const schema = Yup.object().shape({
           email: Yup.string()
