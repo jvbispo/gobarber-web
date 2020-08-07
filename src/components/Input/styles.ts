@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import styled, { css } from 'styled-components';
 import ToolTip from '../toltip/index';
 
@@ -8,8 +9,6 @@ interface ContainerProps {
 }
 
 export const Container = styled.div<ContainerProps>`
- /*background: #232129;*/
- /* border-radius: 5px;*/
   border-bottom: 2px solid #aaa;
   padding: 8px;
   width: 100%;
